@@ -3,7 +3,7 @@
 namespace game {
     Game::Game() {}
 
-    std::optional<engine::crash> Game::verify_system() const {
+    std::optional<engine::crash> Game::verifySystem() const {
         return std::nullopt;
     }
 } // game

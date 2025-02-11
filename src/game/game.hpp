@@ -9,7 +9,7 @@ namespace game {
         Game();
         ~Game() override = default;
 
-        std::optional<engine::crash> verify_system() const override;
+        std::optional<engine::crash> verifySystem() const override;
     };
 
 } // namespace game

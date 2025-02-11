@@ -5,7 +5,10 @@
 
 #include "engine/tools.hpp"
 #include "engine/window.hpp"
+
 #include <spdlog/spdlog.h>
+
+#include "engine/engine_context.hpp"
 
 namespace engine {
 
@@ -14,13 +17,17 @@ namespace engine {
         Application();
         virtual ~Application();
 
-        virtual std::optional<crash> verify_system() const;
+        virtual std::optional<crash> verifySystem() const;
 
         void run();
 
       private:
-        void _verify_system() const;
+        void internalVerifySystem() const;
+        void buildContext();
+
+
+        std::shared_ptr<EngineContext> m_EngineContext;
     };
 
-    void run_application(const std::shared_ptr<Application> &app);
+    void run(const std::shared_ptr<Application> &app);
 } // namespace engine

@@ -12,7 +12,7 @@
 #endif
 
 namespace engine {
-    void error_popup(const std::string_view message) {
+    void errorPopup(const std::string_view message) {
         spdlog::critical("Application crashed: {}", message);
 
 #ifdef WIN32

@@ -38,6 +38,11 @@ set(GAME_SOURCES src/game/main.cpp
         src/game/game.hpp
         src/engine/imgui/imgui_backend.cpp
         src/engine/imgui/imgui_backend.hpp
+        src/engine/engine_context.cpp
+        src/engine/engine_context.hpp
+        src/engine/renderer/vulkan_context.cpp
+        src/engine/renderer/vulkan_context.hpp
+        src/engine/fwd.hpp
 )
 
 add_executable(gaming_rpg ${GAME_SOURCES} ${IMGUI_SOURCES})
@@ -48,4 +53,4 @@ if (WIN32)
     target_link_libraries(gaming_rpg PRIVATE Dwmapi)
 endif ()
 
-target_compile_definitions(gaming_rpg PRIVATE GLFW_INCLUDE_NONE GLFW_INCLUDE_VULKAN)
+target_compile_definitions(gaming_rpg PRIVATE GLFW_INCLUDE_NONE GLFW_INCLUDE_VULKAN VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1)
