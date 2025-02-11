@@ -1,0 +1,12 @@
+/cmake-build-*
+/run/logs
+*.log
+*.spv
+*.exe
+*.o
+*.a
+*.so
+*.obj
+*.lib
+*.dll
+/build/
