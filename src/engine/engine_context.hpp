@@ -45,8 +45,13 @@ namespace engine {
          * intended to exist for long, and further will not be included in any tracking (if you maintain the windows lifetime, the system will not know and may deinitialize before
          * you clean it up).
          */
-        std::unique_ptr<Window> createDummyWindow() const;
+        [[nodiscard]] std::unique_ptr<Window> createDummyWindow() const;
+
+        [[nodiscard]] const DebugSettings& debugSettings() const;
+
       private:
+        DebugSettings m_DebugSettings;
+
 
         std::shared_ptr<VulkanContext> m_VulkanContext;
     };
