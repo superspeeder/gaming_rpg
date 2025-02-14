@@ -8,21 +8,21 @@ namespace engine {
     class Window;
 
     struct SyncInfo {
-        const vk::raii::Semaphore &imageAvailableSemaphore;
-        const vk::raii::Semaphore &renderFinishedSemaphore;
-        const vk::raii::Fence &inFlightFence;
+        const vk::raii::Semaphore &image_available_semaphore;
+        const vk::raii::Semaphore &render_finished_semaphore;
+        const vk::raii::Fence &in_flight_fence;
     };
 
     struct FrameInfo {
         vk::Image image;
-        uint32_t imageIndex;
-        uint32_t frameIndex;
+        uint32_t image_index;
+        uint32_t frame_index;
 
         vk::Extent2D extent;
         vk::Format format;
-        vk::ColorSpaceKHR colorSpace;
+        vk::ColorSpaceKHR color_space;
 
-        SyncInfo syncInfo;
+        SyncInfo sync_info;
     };
 
     class Surface {

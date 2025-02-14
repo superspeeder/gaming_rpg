@@ -122,15 +122,15 @@ namespace engine {
         m_Context->device().resetFences(*m_InFlightFences[m_CurrentFrame]);
 
         return {.image      = m_Images[image_index],
-                .imageIndex = image_index,
-                .frameIndex = m_CurrentFrame,
+                .image_index = image_index,
+                .frame_index = m_CurrentFrame,
                 .extent     = m_Extent,
                 .format     = m_SurfaceFormat.format,
-                .colorSpace = m_SurfaceFormat.colorSpace,
-                .syncInfo   = SyncInfo{
-                      .imageAvailableSemaphore = m_ImageAvailableSemaphores[m_CurrentFrame],
-                      .renderFinishedSemaphore = m_RenderFinishedSemaphores[m_CurrentFrame],
-                      .inFlightFence           = m_InFlightFences[m_CurrentFrame],
+                .color_space = m_SurfaceFormat.colorSpace,
+                .sync_info   = SyncInfo{
+                      .image_available_semaphore = m_ImageAvailableSemaphores[m_CurrentFrame],
+                      .render_finished_semaphore = m_RenderFinishedSemaphores[m_CurrentFrame],
+                      .in_flight_fence           = m_InFlightFences[m_CurrentFrame],
                 }};
     }
 
@@ -138,7 +138,7 @@ namespace engine {
         vk::PresentInfoKHR present_info{};
         present_info.setSwapchains(*m_Swapchain);
         present_info.setWaitSemaphores(*m_RenderFinishedSemaphores[m_CurrentFrame]);
-        present_info.setImageIndices(frame_info.imageIndex);
+        present_info.setImageIndices(frame_info.image_index);
 
         if (m_Context->queues().present.presentKHR(present_info) == vk::Result::eSuboptimalKHR) {
             recreate_swapchain();

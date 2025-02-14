@@ -29,6 +29,7 @@ namespace engine {
 
         void internal_render_frame();
 
+        std::unique_ptr<Window> m_Window;
 
         vk::raii::CommandPool    m_CommandPool    = nullptr;
         vk::raii::CommandBuffers m_CommandBuffers = nullptr;
