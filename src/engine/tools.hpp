@@ -4,7 +4,7 @@
 #include <string_view>
 
 namespace engine {
-    void errorPopup(std::string_view message);
+    void error_popup(std::string_view message);
 
     enum class CrashReason {
         UnsupportedSystem,

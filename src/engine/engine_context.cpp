@@ -3,13 +3,17 @@
 #include <stdexcept>
 
 namespace engine {
-    EngineContext::EngineContext() {}
+    EngineContext::EngineContext() = default;
 
-    std::unique_ptr<Window> EngineContext::createDummyWindow() const {
-        throw std::logic_error("Not implemented");
+    void EngineContext::init() {
+        m_VulkanContext = VulkanContext::create(shared_from_this());
     }
 
-    const DebugSettings &EngineContext::debugSettings() const {
+    std::unique_ptr<Window> EngineContext::create_dummy_window() const {
+        return std::make_unique<Window>(WindowAttributes{"", {1, 1}, false, false});
+    }
+
+    const DebugSettings &EngineContext::debug_settings() const {
         return m_DebugSettings;
     }
 } // engine

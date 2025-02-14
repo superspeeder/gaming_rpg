@@ -16,3 +16,5 @@ MaxEmptyLinesToKeep: 2
 NamespaceIndentation: All
 AllowShortFunctionsOnASingleLine: Inline
 CompactNamespaces: true
+BinPackParameters: OnePerLine
+BinPackArguments: false

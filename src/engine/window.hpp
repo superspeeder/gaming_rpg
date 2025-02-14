@@ -5,27 +5,33 @@
 #include <memory>
 #include <vulkan/vulkan_raii.hpp>
 
-namespace engine {
+#include "renderer/surface.hpp"
 
+namespace engine {
     struct WindowAttributes {
         std::string title;
         glm::uvec2 size;
 
-        bool showOnCreate = true;
+        bool show_on_create = true;
         bool resizable = false;
     };
 
     class Window final {
-      public:
-        explicit Window(const WindowAttributes& windowAttributes);
+    public:
+        explicit Window(const WindowAttributes &window_attributes);
+
         ~Window();
 
-        const std::unique_ptr<vk::raii::SurfaceKHR> &createSurface(const std::unique_ptr<vk::raii::Instance> &instance);
+        [[nodiscard]] vk::raii::SurfaceKHR create_surface_raw(const vk::raii::Instance &instance) const;
 
-      private:
+        const std::unique_ptr<Surface> &create_surface(const std::shared_ptr<VulkanContext> &vulkan_context);
+
+        [[nodiscard]] const std::unique_ptr<Surface> &get_surface() const;
+
+        [[nodiscard]] vk::Extent2D get_inner_size() const;
+
+    private:
         GLFWwindow *m_Window;
-
-        std::unique_ptr<vk::raii::SurfaceKHR> m_Surface;
+        std::unique_ptr<Surface> m_Surface;
     };
-
 } // namespace engine

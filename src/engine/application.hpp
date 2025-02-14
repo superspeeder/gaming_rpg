@@ -17,14 +17,21 @@ namespace engine {
         Application();
         virtual ~Application();
 
-        virtual std::optional<crash> verifySystem() const;
+        virtual std::optional<crash> verify_system() const;
 
         void run();
 
-      private:
-        void internalVerifySystem() const;
-        void buildContext();
+        virtual void render_frame(const vk::raii::CommandBuffer &cmd, const FrameInfo &frame_info) = 0;
 
+      private:
+        void internal_verify_system() const;
+        void build_context();
+
+        void internal_render_frame();
+
+
+        vk::raii::CommandPool    m_CommandPool    = nullptr;
+        vk::raii::CommandBuffers m_CommandBuffers = nullptr;
 
         std::shared_ptr<EngineContext> m_EngineContext;
     };

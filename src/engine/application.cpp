@@ -7,27 +7,35 @@ namespace engine {
 
     Application::~Application() {}
 
-    std::optional<crash> Application::verifySystem() const {
+    std::optional<crash> Application::verify_system() const {
         return std::nullopt;
     }
 
     void Application::run() {
-        internalVerifySystem();
-        buildContext();
+        glfwInit();
+
+        internal_verify_system();
+        build_context();
     }
 
-    void Application::internalVerifySystem() const {
+    void Application::internal_verify_system() const {
         if (!glfwVulkanSupported()) {
             throw crash(CrashReason::UnsupportedSystem, "System unsupported! Your GPU must support Vulkan and your system must have Vulkan drivers installed for it.");
         }
 
-        if (auto r = verifySystem(); r.has_value()) {
+        if (auto r = verify_system(); r.has_value()) {
             throw r.value();
         }
     }
 
-    void Application::buildContext() {
-        m_EngineContext = std::make_shared<EngineContext>();
+    void Application::build_context() {
+        m_EngineContext = EngineContext::create();
+    }
+
+    void Application::internal_render_frame() {
+        try {} catch (vk::OutOfDateKHRError& error) {
+            recreate_swapchains();
+        }
     }
 
     void run(const std::shared_ptr<Application> &app) {
@@ -35,11 +43,11 @@ namespace engine {
             app->run();
         } catch (crash& c) {
             spdlog::critical(c.what());
-            errorPopup(c.message);
+            error_popup(c.message);
             std::exit(-1);
         } catch (std::exception& e) {
             spdlog::critical(e.what());
-            errorPopup(e.what());
+            error_popup(e.what());
             std::exit(-1);
         }
     }
