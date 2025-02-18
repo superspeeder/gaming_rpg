@@ -93,7 +93,7 @@ namespace engine {
         create_info.imageExtent                = m_Extent;
         create_info.imageFormat                = m_SurfaceFormat.format;
         create_info.imageColorSpace            = m_SurfaceFormat.colorSpace;
-        create_info.imageUsage                 = vk::ImageUsageFlagBits::eColorAttachment | vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferSrc;
+        create_info.imageUsage                 = vk::ImageUsageFlagBits::eColorAttachment | vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eTransferSrc;
         create_info.imageArrayLayers           = 1;
 
         std::vector<uint32_t> queue_family_indices;
@@ -143,5 +143,7 @@ namespace engine {
         if (m_Context->queues().present.presentKHR(present_info) == vk::Result::eSuboptimalKHR) {
             recreate_swapchain();
         }
+
+        m_CurrentFrame = (m_CurrentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
     }
 } // namespace engine

@@ -30,6 +30,8 @@ namespace engine {
 
         [[nodiscard]] vk::Extent2D get_inner_size() const;
 
+        [[nodiscard]] bool is_open() const;
+
     private:
         GLFWwindow *m_Window;
         std::unique_ptr<Surface> m_Surface;

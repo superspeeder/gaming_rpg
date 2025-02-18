@@ -17,11 +17,24 @@ namespace engine {
         internal_verify_system();
         build_context();
 
-        m_Window = std::make_unique<Window>(WindowAttributes{"Hello!", {800, 600}, true, false});
-        m_Window->create_surface(m_EngineContext->vulkan());
+        // m_Window = std::make_unique<Window>(WindowAttributes{"Hello!", {800, 600}, true, false});
+        // m_Window->create_surface(m_EngineContext->vulkan());
 
-        m_CommandPool = vk::raii::CommandPool(m_EngineContext->vulkan()->device(), vk::CommandPoolCreateInfo(vk::CommandPoolCreateFlagBits::eResetCommandBuffer, m_EngineContext->vulkan()->primary_queue_family()));
-        m_CommandBuffers = vk::raii::CommandBuffers(m_EngineContext->vulkan()->device(), vk::CommandBufferAllocateInfo(*m_CommandPool, vk::CommandBufferLevel::ePrimary, Surface::MAX_FRAMES_IN_FLIGHT));
+        m_CommandPool = vk::raii::CommandPool(
+            m_EngineContext->vulkan()->device(), vk::CommandPoolCreateInfo(vk::CommandPoolCreateFlagBits::eResetCommandBuffer, m_EngineContext->vulkan()->primary_queue_family())
+        );
+        m_CommandBuffers = vk::raii::CommandBuffers(
+            m_EngineContext->vulkan()->device(), vk::CommandBufferAllocateInfo(*m_CommandPool, vk::CommandBufferLevel::ePrimary, Surface::MAX_FRAMES_IN_FLIGHT)
+        );
+
+
+        // while (m_Window->is_open()) {
+        //     glfwPollEvents();
+        //
+        //     internal_render_frame();
+        // }
+
+        m_EngineContext->vulkan()->device().waitIdle();
     }
 
     void Application::internal_verify_system() const {
@@ -36,6 +49,8 @@ namespace engine {
 
     void Application::build_context() {
         m_EngineContext = EngineContext::create();
+        m_WindowManager = std::make_shared<WindowManager>();
+        m_WindowManager->connect_render_context(m_EngineContext->vulkan());
     }
 
     void Application::internal_render_frame() {
@@ -45,22 +60,18 @@ namespace engine {
             const auto &cmd = m_CommandBuffers[frame_info.frame_index];
             cmd.reset();
             cmd.begin(vk::CommandBufferBeginInfo(vk::CommandBufferUsageFlagBits::eOneTimeSubmit));
-
             render_frame(cmd, frame_info);
-
             cmd.end();
 
-            vk::SemaphoreSubmitInfo ia_sem{*frame_info.sync_info.image_available_semaphore, 0, vk::PipelineStageFlagBits2::eTopOfPipe};
-            vk::SemaphoreSubmitInfo rf_sem{*frame_info.sync_info.render_finished_semaphore, 0, vk::PipelineStageFlagBits2::eBottomOfPipe};
+            vk::SemaphoreSubmitInfo     ia_sem{*frame_info.sync_info.image_available_semaphore, 0, vk::PipelineStageFlagBits2::eTopOfPipe};
+            vk::SemaphoreSubmitInfo     rf_sem{*frame_info.sync_info.render_finished_semaphore, 0, vk::PipelineStageFlagBits2::eBottomOfPipe};
             vk::CommandBufferSubmitInfo cbsi{*cmd, 0};
 
-            vk::SubmitInfo2 si{{}, ia_sem, cbsi, rf_sem};
+            const vk::SubmitInfo2 si{{}, ia_sem, cbsi, rf_sem};
             m_EngineContext->vulkan()->queues().primary.main.submit2(si, frame_info.sync_info.in_flight_fence);
 
             m_Window->get_surface()->end_frame(frame_info);
-
-
-        } catch (vk::OutOfDateKHRError& error) {
+        } catch (vk::OutOfDateKHRError &error) {
             m_Window->get_surface()->recreate_swapchain();
         }
     }
@@ -68,11 +79,11 @@ namespace engine {
     void run(const std::shared_ptr<Application> &app) {
         try {
             app->run();
-        } catch (crash& c) {
+        } catch (crash &c) {
             spdlog::critical(c.what());
             error_popup(c.message);
             std::exit(-1);
-        } catch (std::exception& e) {
+        } catch (std::exception &e) {
             spdlog::critical(e.what());
             error_popup(e.what());
             std::exit(-1);

@@ -77,7 +77,7 @@ namespace engine {
             bool     selected_present_family  = false;
             uint32_t index                    = 0;
 
-            auto dummy_window = m_EngineContext->create_dummy_window();
+            auto dummy_window = m_EngineContext.lock()->create_dummy_window();
             auto surface      = dummy_window->create_surface_raw(m_Instance);
 
             auto queueFamilyProperties = m_PhysicalDevice.getQueueFamilyProperties();
@@ -165,5 +165,22 @@ namespace engine {
                 }
             }
         }
+    }
+
+    void transition_image(const vk::raii::CommandBuffer &cmd, const vk::Image image, const vk::ImageSubresourceRange &isr, const ImageState &src, const ImageState &dst) {
+        vk::ImageMemoryBarrier2 barrier{
+            src.stage,
+            src.access,
+            dst.stage,
+            dst.access,
+            src.layout,
+            dst.layout,
+            src.owner,
+            dst.owner,
+            image,
+            isr,
+        };
+
+        cmd.pipelineBarrier2({{}, {}, {}, barrier});
     }
 } // namespace engine

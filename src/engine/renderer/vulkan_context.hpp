@@ -15,6 +15,7 @@ namespace engine {
         QueueSet &operator=(QueueSet &&other) noexcept = default;
 
         QueueSet() = default;
+
         inline explicit QueueSet(vk::raii::Queue queue) : main(std::move(queue)) {}
     };
 
@@ -76,10 +77,11 @@ namespace engine {
         inline bool are_present_render_shared() const { return m_PresentationQueueFamily == m_PrimaryQueueFamily; }
 
         inline uint32_t present_queue_family() const { return m_PresentationQueueFamily; }
+
         inline uint32_t primary_queue_family() const { return m_PrimaryQueueFamily; }
 
       private:
-        std::shared_ptr<EngineContext> m_EngineContext;
+        std::weak_ptr<EngineContext> m_EngineContext;
 
         vk::raii::Context        m_Context;
         vk::raii::Instance       m_Instance       = nullptr;
@@ -94,4 +96,13 @@ namespace engine {
 
         Queues m_Queues;
     };
+
+    struct ImageState {
+        vk::ImageLayout  layout;
+        vk::AccessFlags2 access;
+        vk::PipelineStageFlags2 stage;
+        uint32_t owner = 0;
+    };
+
+    void transition_image(const vk::raii::CommandBuffer &cmd, vk::Image image, const vk::ImageSubresourceRange &isr, const ImageState &src, const ImageState &dst);
 } // namespace engine

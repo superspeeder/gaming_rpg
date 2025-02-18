@@ -17,9 +17,11 @@ namespace engine {
         Application();
         virtual ~Application();
 
-        virtual std::optional<crash> verify_system() const;
+        [[nodiscard]] virtual std::optional<crash> verify_system() const;
 
         void run();
+
+        [[nodiscard]] inline const std::shared_ptr<EngineContext> &engine() const { return m_EngineContext; };
 
         virtual void render_frame(const vk::raii::CommandBuffer &cmd, const FrameInfo &frame_info) = 0;
 
@@ -29,12 +31,11 @@ namespace engine {
 
         void internal_render_frame();
 
-        std::unique_ptr<Window> m_Window;
-
         vk::raii::CommandPool    m_CommandPool    = nullptr;
         vk::raii::CommandBuffers m_CommandBuffers = nullptr;
 
         std::shared_ptr<EngineContext> m_EngineContext;
+        std::shared_ptr<WindowManager> m_WindowManager;
     };
 
     void run(const std::shared_ptr<Application> &app);

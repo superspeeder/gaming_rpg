@@ -45,6 +45,8 @@ set(GAME_SOURCES src/game/main.cpp
         src/engine/fwd.hpp
         src/engine/renderer/surface.cpp
         src/engine/renderer/surface.hpp
+        src/engine/window_manager.cpp
+        src/engine/window_manager.hpp
 )
 
 add_executable(gaming_rpg ${GAME_SOURCES} ${IMGUI_SOURCES})

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/window.hpp"
+#include "window_manager.hpp"
 
 #include "engine/renderer/vulkan_context.hpp"
 
@@ -67,8 +68,9 @@ namespace engine {
       private:
         DebugSettings m_DebugSettings;
 
-
         std::shared_ptr<VulkanContext> m_VulkanContext;
+
+        std::shared_ptr<WindowManager> m_WindowManager;
     };
 
 } // namespace engine

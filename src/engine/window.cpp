@@ -40,8 +40,12 @@ namespace engine {
     }
 
     vk::Extent2D Window::get_inner_size() const {
-        int w,h;
+        int w, h;
         glfwGetFramebufferSize(m_Window, &w, &h);
         return vk::Extent2D(w, h);
+    }
+
+    bool Window::is_open() const {
+        return !glfwWindowShouldClose(m_Window);
     }
 } // namespace engine
